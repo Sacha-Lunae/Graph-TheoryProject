@@ -11,6 +11,16 @@ def swapMatrix(matrix) :
             swapped[j][i] = matrix[i][j]
     return swapped
 
+
+def alphaOmega(matrix):
+    alphaOmega = []
+    for i, line in enumerate(matrix):
+        if all(element == 0 for element in line):
+            alphaOmega.append(1)
+        else :
+            alphaOmega.append(0)
+    return alphaOmega
+
 def getAdjacencyMatrix(consTable):
     numberOfVertices = len(consTable)
     #Setting up the 2D matrix
@@ -22,7 +32,13 @@ def getAdjacencyMatrix(consTable):
         for constraint in range(2, len(consTable[vertice])):
             #We add the '-1' because python indexes begin at 0
             adjacency_matrix[vertice][consTable[vertice][constraint] - 1] = 1
-    return swapMatrix(adjacency_matrix)
+
+    alpha = alphaOmega(adjacency_matrix)
+    adjacency_matrix = swapMatrix(adjacency_matrix)
+    omega = alphaOmega(adjacency_matrix)
+    adjacency_matrix.insert(0, alpha)
+    adjacency_matrix.append(omega)
+    return adjacency_matrix
 
 
 print(getAdjacencyMatrix(getConsTable(1)))
