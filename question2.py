@@ -38,6 +38,23 @@ def getAdjacencyMatrix(consTable):
     omega = alphaOmega(adjacency_matrix)
     adjacency_matrix.insert(0, alpha)
     adjacency_matrix.append(omega)
+
+    starts = adjacency_matrix[0]
+
+
+    for i in range (len(adjacency_matrix)) : 
+
+        adjacency_matrix[i].insert(0,0)
+
+
+        if all(element == 0 for element in adjacency_matrix[i]):
+            adjacency_matrix[i].append(1)
+        else : 
+            adjacency_matrix[i].append(0)
+
+
+
+
     return adjacency_matrix
 
 
