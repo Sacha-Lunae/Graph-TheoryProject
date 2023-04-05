@@ -16,17 +16,3 @@ def getConsTable(n) :
 
 def printConsTable(n) :
     print(getConsTable(n))
-
-
-
-def bellman_ford_max(graph, source):
-    dist = [float('-inf')] * len(graph)
-    dist[source - 1] = graph[source - 1][1]
-    for i in range(len(graph) - 1):
-        for u in range(len(graph)):
-            for v in graph[u][2:]:
-                if dist[v - 1] < dist[u] + graph[v - 1][1]:
-                    dist[v - 1] = dist[u] + graph[v - 1][1]
-    return dist
-
-print(bellman_ford_max(getConsTable(11), 0))

@@ -39,8 +39,6 @@ def getAdjacencyMatrix(consTable):
     adjacency_matrix.insert(0, alpha)
     adjacency_matrix.append(omega)
 
-    starts = adjacency_matrix[0]
-
 
     for i in range (len(adjacency_matrix)) : 
 
@@ -52,13 +50,38 @@ def getAdjacencyMatrix(consTable):
         else : 
             adjacency_matrix[i].append(0)
 
-
-
-
     return adjacency_matrix
-
-
-print(getAdjacencyMatrix(getConsTable(1)))
         
+def weights(graph) :
+    weights = []
+    for i in range (len(graph)) :
+        weights.append(graph[i][1])
+
+    weights.insert(0,0)
+    weights.append(0)
+
+    return weights
+
+
+def bellman(graph, weights):
+    n = len(graph)
+    dist = [float('-inf')] * n
+    dist[0] = 0
+    for i in range(n - 1):
+        for u in range(n):
+            for v in range(n):
+                if graph[u][v] != 0:
+                    if dist[v] < dist[u] + weights[u]:
+                        dist[v] = dist[u] + weights[u]
+
+    return dist
+
+
+print (weights(getConsTable(11)))
+print(bellman(getAdjacencyMatrix(getConsTable(11)), weights(getConsTable(11))))
+    
+
+
+#print(bellman_ford(getAdjacencyMatrix(getConsTable((11))), weights(getConsTable(11)), 0))
 
 
