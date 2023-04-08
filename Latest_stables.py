@@ -60,7 +60,9 @@ def latestBySuccessors(n, listEarliest):    # If you want to test the function: 
             listTempo2.update({rankl[i]: final})
     for valeur in listTempo2.values():
         listLateSuccFINAL.append(valeur)
-    return listLateSuccFINAL.reverse()
+     for i in range(len(listTempo3)-1,-1,-1):
+        listLateSuccFINAL.append(listTempo3[i])
+    return listLateSuccFINAL
 
 
 def display_latest(n, matrix):
