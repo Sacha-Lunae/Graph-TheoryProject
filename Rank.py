@@ -6,12 +6,7 @@ def display_matrix(matrix):
     """
     Takes a 2D matrix as input and displays it in a clean and easily readable way, with "1" values printed in red.
     """
-    ## Print the column indices at the top
-    #for i in range(len(matrix[0])):
-    #    print(str(i + 1), end=" ")
-    #print()
 
-    # Print the matrix rows, highlighting "1" values in red
     for row in matrix:
         formatted_row = [("\033[91m" + str(element) + "\033[0m") if element == 1 else str(element) for element in row]
         print(" ".join(formatted_row))
@@ -30,13 +25,14 @@ def add_column_number(matrix):
 
 
 def find_rank(matrix,rank,ranklist):
+
     display_matrix(matrix)
 
     if len(matrix) == 0 or all(len(row) == 0 for row in matrix):
+        print(f"The rank of column number omega column is {rank}")
+        ranklist['omega'] = rank
         return ranklist
-# { "1": 0,"5": 1,"4": 2, "2": 3,"6": 3,"3": 4,"7": 5, "8": 6}
-# | [[],   [1], [1, 5], [1, 4], [4, 5], [2], [3, 5], [2, 4, 6, 7]] |
-# | [[],   [1], [1, 5], [1, 2], [2, 5], [1], [4, 5], [1, 2, 6, 3]] |
+
 
     """
     Takes a 2D matrix as input, deletes all columns and rows with a sum of 0, and returns the modified matrix.
@@ -49,9 +45,15 @@ def find_rank(matrix,rank,ranklist):
     for col_index in range(matrix.shape[1]):
         col_sum = np.sum(matrix[1:, col_index])
         if col_sum == 0:
-            zero_sum_cols.append(col_index)
-            print(f"The rank of column number {matrix[0][col_index]} column is {rank}")
-            ranklist.update({matrix[0][col_index]:rank})
+            if rank == 0:
+                zero_sum_cols.append(col_index)
+                print(f"The rank of column number alpha column is {rank}")
+                ranklist.update({"alpha": rank})
+
+            else:
+                zero_sum_cols.append(col_index)
+                print(f"The rank of column number {matrix[0][col_index]} column is {rank}")
+                ranklist.update({matrix[0][col_index]:rank})
 
     # Delete the zero-sum columns from the matrix
     if len(zero_sum_cols) > 0:
@@ -66,19 +68,27 @@ def find_rank(matrix,rank,ranklist):
 
     matrix = matrix.tolist()
 
+
     # Return the modified matrix
     return find_rank(matrix,rank+1,ranklist)
 
+
+def del_omega(matrix):
+    new_matrix = [row[:-1] for row in matrix[:-1]]  # Remove last column and last row using list slicing
+    return new_matrix
 
 
 #print(add_column_number(getAdjacencyMatrix(getConsTable(2))))
 #display_matrix(getAdjacencyMatrix(getConsTable(4)))
 
 
-#print(getAdjacencyMatrix(getConsTable(11)))
+#print(display_matrix(getAdjacencyMatrix(
+#            getConsTable(2))))
 
-#print(find_rank(
-    #    add_column_number(
-    #   getAdjacencyMatrix(
-#       getConsTable(11))),rank=0,ranklist={}))
-#[[], [1], [1, 5], [1, 4], [4, 5], [2], [3, 5], [2, 4, 6, 7]]
+
+
+print(find_rank(
+        add_column_number(
+            del_omega(
+                 getAdjacencyMatrix(
+                    getConsTable(7)))),rank=0,ranklist={}))
