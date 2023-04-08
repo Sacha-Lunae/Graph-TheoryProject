@@ -41,6 +41,7 @@ def latestBySuccessors(n, listEarliest):    # If you want to test the function: 
                                             # getAdjacencyMatrix(getConsTable(n)),globalDurations(getConsTable(n))))
     listTempo1 = []
     listTempo2 = {}
+    listTempo3 = []
     listLateSuccFINAL = []
     departurePoint = listEarliest[len(listEarliest) - 1]
     for i in range(len(rankl) - 1, -1, -1):
