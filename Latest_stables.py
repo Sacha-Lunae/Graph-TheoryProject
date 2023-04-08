@@ -60,7 +60,7 @@ def latestBySuccessors(n, listEarliest):    # If you want to test the function: 
             listTempo1 = []
             listTempo2.update({rankl[i]: final})
     for valeur in listTempo2.values():
-        listLateSuccFINAL.append(valeur)
+        listTempo3.append(valeur)
      for i in range(len(listTempo3)-1,-1,-1):
         listLateSuccFINAL.append(listTempo3[i])
     return listLateSuccFINAL
