@@ -1,68 +1,108 @@
 from Rank import *
-import numpy as np
-
-"""rankDico=find_rank(
-    add_column_number(
-        getAdjacencyMatrix(
-            getConsTable(11))),rank=0,ranklist={})"""
-
-rankDico = {"1": 0, "5": 1, "4": 2, "2": 3, "6": 3, "3": 4, "7": 5, "8": 6}
+from commonFunctionsEarlLate import *
 
 
-def globalDurations(graph):  # If you want to test the function: globalDurations(getConsTable(11)
-    durations = []
-    for i in range(len(graph)):
-        durations.append(graph[i][1])
-
-    durations.insert(0, 0)
-    durations.append(0)
-    return durations
-
-
-def earliestByPredecessorsUsingBellman(graph,
-                                       durations):  # If you want to test the function: earliestByPredecessorsUsingBellman(
-    # getAdjacencyMatrix(getConsTable(11)),globalDurations(getConsTable(11)))
-    n = len(graph)
-    dist = [float('-inf')] * n
-    dist[0] = 0
-    for i in range(n - 1):
-        for u in range(n):
-            for v in range(n):
-                if graph[u][v] != 0:
-                    if dist[v] < dist[u] + durations[u]:
-                        dist[v] = dist[u] + durations[u]
-    return np.sort(dist)
+def hasPredecessorsVertex(matrix,
+                          vertex):  # If you want to test the function: hasSuccessorsState(getConsTable(n), vertex)
+    count = 0
+    for i in range(len(matrix)):
+        # for j in range(2, len(matrix[i])):
+        if matrix[i][0] == vertex:
+            for j in range(2, len(matrix[i])):
+                count = count + 1
+    return count
 
 
-def getDurationByVertex(table, vertex):  # If you want to test the function: getDurationByVertex(getConsTable(n),vertex)
-    for i in range(len(table)):
-        if not vertex:
-            duration = table[i][1]
-            return duration
-        if table[i][0] == vertex:
-            duration = table[i][1]
-            return duration
+def getPredecessors(matrix, vertex):  # If you want to test the function: getPredecessors(getConsTable(n), vertex)
+    temp = []
+    pred = []
+    for i in range(len(matrix)):
+        if matrix[i][0] == vertex:
+            temp.append(matrix[i][2:])
+    for i in range(len(temp)):
+        for j in range(len(temp[i])):
+            pred.append(temp[i][j])
+    return pred
 
 
-def setPredecessorsOrder(table):  # If you want to test the function: setPredecessorsOrder(getConsTable(n))
+def getPredecessorsOmega(n,matrix):  # If you want to test the function: getPredecessors(getConsTable(n))
+    pred = []
+
+    for k in range(len(matrix)):
+        if not hasSuccessorsVertex(getConsTable(n),matrix[k][0]):
+            pred.append(matrix[k][0])
+    return pred
+
+
+def earliestByPredecessors(n, rankl):   # If you want to test the function: earliestByPredecessors(n,rankDicoInlist(find_rank(add_column_number(
+                                        # del_omega(getAdjacencyMatrix(n))),rank=0,ranklist={})))
+    listTempo1 = []
+    listTempo2 = {}
+    listEarlPredFINAL = []
+    for i in range(len(rankl)):
+        if rankl[i] == 0:
+            listTempo2.update({rankl[i]:0})
+        elif rankl[i] == -2:
+            Succ = getPredecessorsOmega(n, getConsTable(n))
+            for j in range(len(Succ)):
+                for cle, valeur in listTempo2.items():
+                    if cle == Succ[j]:
+                        temp = valeur + getDurationByVertex(getConsTable(n), Succ[j])
+                        listTempo1.append(temp)
+            listTempo1.sort()
+            final = listTempo1[len(listTempo1) - 1]
+            listTempo1 = []
+            listTempo2.update({rankl[i]: final})
+
+        elif hasPredecessorsVertex(getConsTable(n), rankl[i]) == 0:
+            listTempo2.update({rankl[i]: 0})
+
+        else:
+            Succ = getPredecessors(getConsTable(n), rankl[i])
+            for j in range(len(Succ)):
+                for cle, valeur in listTempo2.items():
+                    if cle == Succ[j]:
+                        temp = valeur + getDurationByVertex(getConsTable(n), Succ[j])
+                        listTempo1.append(temp)
+            listTempo1.sort()
+            final = listTempo1[len(listTempo1)-1]
+            listTempo1 = []
+            listTempo2.update({rankl[i]: final})
+    for valeur in listTempo2.values():
+        listEarlPredFINAL.append(valeur)
+    return listEarlPredFINAL
+
+
+def setPredecessorsOrder(table,
+                         rankDico):  # If you want to test the function: setPredecessorsOrder(getConsTable(n),find_rank(add_column_number(del_omega(getAdjacencyMatrix(11))),rank=0,ranklist={})))
     listPred = []
-    for cle in rankDico.keys():
-        for i in range(len(table)):  # getAdjacencyMatrix(getConsTable(11))))
+    for cle,val in rankDico.items():
+        if int(cle) == 0:
+            listPred.append([])
+        elif int(cle) == -2:
+            temp = val
+            for key,values in rankDico.items():
+                if values==temp-1:
+                    listPred.append([key])
+        for i in range(len(table)):
             if int(cle) == table[i][0]:
-                listPred.append(table[i][2:])
+                if hasPredecessorsVertex(table, int(cle)) == 0:
+                    listPred.append([0])
+                else:
+                    listPred.append(table[i][2:])
     return listPred
 
-
-def setDurationOrder(n, listPredecessors):  # If you want to test the function: setDurationOrder(n, setPredecessorsOrder(rankDico))
+def setDurationOrder(n,
+                     listPredecessors):  # If you want to test the function: setDurationOrder(n, setPredecessorsOrder(find_rank(add_column_number(del_omega(getAdjacencyMatrix(11))),rank=0,ranklist={}))))
     listEarlDura = []
     for i in range(len(listPredecessors)):
         newline = []
-        if listPredecessors[i] == 0:
-            newline.append(0)
-            listEarlDura.append(newline)
         for j in range(len(listPredecessors[i])):
-            dur = getDurationByVertex(getConsTable(n),listPredecessors[i][j])
-            newline.append(dur)
+            if listPredecessors[i][j] == 0:
+                newline.append(0)
+            else:
+                dur = getDurationByVertex(getConsTable(n), listPredecessors[i][j])
+                newline.append(dur)
         listEarlDura.append(newline)
     return listEarlDura
 
@@ -75,11 +115,10 @@ def displayEarliest(n, Ranklist):  # If you want to test the function: displayEa
     for key in Ranklist.keys():
         listVertex.append(int(key))
 
-    listPred = setPredecessorsOrder(getConsTable(n))
+    listPred = setPredecessorsOrder(getConsTable(n),
+                                    find_rank(add_column_number(del_omega(getAdjacencyMatrix(n))), rank=0, ranklist={}))
     listEarlPredINIT = setDurationOrder(n, listPred)
-    listEarlPredFINAL = earliestByPredecessorsUsingBellman(getAdjacencyMatrix(getConsTable(n)),
-                                                           globalDurations(getConsTable(n)))
-
+    listEarlPredFINAL = earliestByPredecessors(n,rankDicoInlist(find_rank(add_column_number(del_omega(getAdjacencyMatrix(n))),rank=0,ranklist={})))
 
     print("|", listRank, "|")
     print("|", listVertex, "|")
@@ -87,5 +126,4 @@ def displayEarliest(n, Ranklist):  # If you want to test the function: displayEa
     print("|", listEarlPredINIT, "|")
     print("|", listEarlPredFINAL, "|")
 
-
-displayEarliest(11, rankDico)
+#displayEarliest(2, find_rank(add_column_number(del_omega(getAdjacencyMatrix((2)))),rank=0,ranklist={}))
