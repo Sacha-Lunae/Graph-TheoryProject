@@ -3,7 +3,7 @@ from question1 import *
 
 
 
-matrix = getAdjacencyMatrix(getConsTable(12))
+matrix = getAdjacencyMatrix(getConsTable(11))
 countrowcol= []
 
 def initlabelrowcol(countrowcol, adj_matrix):
@@ -63,7 +63,7 @@ def remove_zeros(matrix):
     while running:
 
         columns_erased=0
-        #print("new matrix :")
+        print("\n")
         #we attribute the parameter of the function to a variable
         adj_matrix = matrix
         #we print the matrix
