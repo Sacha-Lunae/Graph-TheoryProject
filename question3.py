@@ -3,7 +3,7 @@ from question1 import *
 
 
 
-matrix = getAdjacencyMatrix(getConsTable(11))
+matrix =  getAdjacencyMatrix(12)
 countrowcol= []
 
 def initlabelrowcol(countrowcol, adj_matrix):
@@ -148,7 +148,7 @@ def remove_zeros(matrix):
 
 
 
-remove_zeros(matrix)
+#remove_zeros(matrix)
 
 
 
@@ -157,23 +157,35 @@ remove_zeros(matrix)
 
 
 def singleentrypoint(n):
-    adj_matrix = getAdjacencyMatrix(getConsTable(n))
-
+    adj_matrix = getAdjacencyMatrix(n)
+    positionsingle=[]
     countsigle=0
     for i in range(len(adj_matrix[0])):
-        countsigle+=adj_matrix[0][i]
-    if countsigle>1:
-        print(countsigle, " points into one")
+        countsigle += adj_matrix[0][i]
+        if adj_matrix[0][i] == 1:
+            positionsingle.append(i)
+    if countsigle > 1:
+        print(countsigle, "points into one at position :", positionsingle)
     else:
-        print("only a single point")
+        print("only a single entry point :")
+        print(positionsingle)
+
 
 def singleexitpoint(n):
-    adj_matrix = getAdjacencyMatrix(getConsTable(n))
-    countsigle = 0
-    print("voici les exit points",adj_matrix[-1])
-    for i in range(len(adj_matrix[-1])):
-        countsigle += adj_matrix[-1][i]
-    if countsigle > 1:
-        print(countsigle,"exit points into one")
+    adj_matrix = getAdjacencyMatrix(n)
+    positionsingle=[]
+    countsigle=0
+    for i in range(len(adj_matrix)):
+        countsigle+=adj_matrix[i][-1]
+        if adj_matrix[i][-1]==1:
+            positionsingle.append(i)
+    if countsigle>1:
+        print(countsigle, " points merge into one at :", positionsingle)
     else:
-        print("only an exit point")
+        print("only a single exit point at :" ,positionsingle)
+
+
+
+for i in matrix:
+    print(i)
+singleexitpoint(12)
