@@ -1,4 +1,5 @@
 from question1 import *
+from prettyTables import * 
 
 def swapMatrix(matrix) :
     #the following function puts the rows in the lines and vice-versa
@@ -21,7 +22,8 @@ def alphaOmega(matrix):
             alphaOmega.append(0)
     return alphaOmega
 
-def getAdjacencyMatrix(consTable):
+def getAdjacencyMatrix(graphNum):
+    consTable = getConsTable(graphNum)
     numberOfVertices = len(consTable)
     #Setting up the 2D matrix
     adjacency_matrix = [[0] * numberOfVertices for i in range(numberOfVertices)]
@@ -44,15 +46,20 @@ def getAdjacencyMatrix(consTable):
 
         adjacency_matrix[i].insert(0,0)
 
-
         if all(element == 0 for element in adjacency_matrix[i]):
-            adjacency_matrix[i].append(1)
+                adjacency_matrix[i].append(1)
         else : 
             adjacency_matrix[i].append(0)
 
+
+    for i in range (len(adjacency_matrix)) :
+        if adjacency_matrix[-1][i] == 1 :
+            adjacency_matrix[-1][i] = 0
+
     return adjacency_matrix
         
-def weights(graph) :
+def getWeights(graphNum) :
+    graph = getConsTable(graphNum)
     weights = []
     for i in range (len(graph)) :
         weights.append(graph[i][1])
@@ -63,25 +70,24 @@ def weights(graph) :
     return weights
 
 
-def bellman(graph, weights):
+def bellman(graphNum):
+    graph = getAdjacencyMatrix(graphNum)
+    weights = getWeights(graphNum)
     n = len(graph)
+
+    #initialisation de l'algo de bellman
     dist = [float('-inf')] * n
     dist[0] = 0
+
+
     for i in range(n - 1):
         for u in range(n):
             for v in range(n):
-                if graph[u][v] != 0:
+                if graph[u][v] == 1:
                     if dist[v] < dist[u] + weights[u]:
                         dist[v] = dist[u] + weights[u]
 
     return dist
 
 
-print (weights(getConsTable(11)))
-print(bellman(getAdjacencyMatrix(getConsTable(11)), weights(getConsTable(11))))
-    
-
-
-#print(bellman_ford(getAdjacencyMatrix(getConsTable((11))), weights(getConsTable(11)), 0))
-
-
+prettyBellman(bellman(11))
