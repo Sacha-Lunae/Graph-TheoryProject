@@ -3,8 +3,10 @@ from question1 import *
 
 
 
-matrix =  getAdjacencyMatrix(6)
+matrix =  getAdjacencyMatrix(7)
 countrowcol= []
+#for i in matrix:
+ #   print(i)
 
 def initlabelrowcol(countrowcol, adj_matrix):
     for i in range(len(adj_matrix)):
@@ -154,7 +156,7 @@ def remove_zeros(matrix):
 
 
 
-remove_zeros(matrix)
+#remove_zeros(matrix)
 
 
 
@@ -192,44 +194,22 @@ def singleexitpoint(n):
 
 
 
-for i in matrix:
-    print(i)
+
 #singleentrypoint(12)
 
-def is_scheduling_graph(graph_matrix):
-    # Iterate through each vertex in the graph
-    for vertex in range(len(graph_matrix)):
-        # Get the weights of all outgoing edges of the vertex
-        outgoing_weights = set([graph_matrix[vertex][j] for j in range(len(graph_matrix)) if graph_matrix[vertex][j] != 0])
-
-        # Check if all outgoing edges have the same weight
-        if len(outgoing_weights) != 1:
-            print("heh you failed")
-            return False
-
-    # If all vertices satisfy the condition, return True
-    print("YOLO TRUEEEE")
-    return True
 
 
-
-def outgoingzero(graph_matrix):
-    # Check if the entry vertex has any outgoing edges
-    if any(graph_matrix[0][j] != 0 for j in range(1, len(graph_matrix))):
-        print("false begin")
-        return False
-
-    # Iterate through each vertex in the graph except for the entry vertex
-    for vertex in range(1, len(graph_matrix)):
-        # Get the weights of all outgoing edges of the vertex
-        outgoing_weights = set([graph_matrix[vertex][j] for j in range(len(graph_matrix)) if graph_matrix[vertex][j] != 0])
-
-        # Check if all outgoing edges have the same weight
-        if len(outgoing_weights) != 1:
-            print("NO")
-            return False
-
-    # If all vertices satisfy the conditions, return True
-    print("YEAH")
-    return True
+def negative_edges(n):
+    #we open the file
+    fileName = "tables/" + str(n) + ".txt"
+    with open(fileName) as file:
+        for line in file:#we split the file into lines
+            columns = line.split()#and we put those lines inside a 2d list
+            if len(columns) > 1:#we check if there is more than one column
+                #print(columns[1])
+                second_column = int(columns[1])#we put the second column in a variable
+                if second_column < 0:#if it is negative, it is printed
+                    print(f'Negative integer found: {second_column}')
+            
+#negative_edges(1)
 
