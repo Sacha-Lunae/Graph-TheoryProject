@@ -3,7 +3,7 @@ from question1 import *
 
 
 
-matrix =  getAdjacencyMatrix(12)
+matrix =  getAdjacencyMatrix(6)
 countrowcol= []
 
 def initlabelrowcol(countrowcol, adj_matrix):
@@ -50,6 +50,7 @@ def remove_rowcol(adj_matrix, finderrow, findercol):
 
 
 def remove_zeros(matrix):
+
     #here is the attribution of the variables
     #running if for the while loop
     running=True
@@ -61,59 +62,64 @@ def remove_zeros(matrix):
 
 
     while running:
+        try:
+            columns_erased=0
+            print("\n")
+            #we attribute the parameter of the function to a variable
+            adj_matrix = matrix
+            #we print the matrix
+            for i in adj_matrix:
+                print(i)
+            #if the matrix is a 0(1 row and column) , or only a 1, it will return false
+            if adj_matrix == [[0]]or adj_matrix==[[1]]:
+                print("connection terminated")
+                return False
+            #we attribute the counters for the next parts
+            num_rows = len(adj_matrix)
+            adj_matrix[0]
+            num_cols = len(adj_matrix[0])
+            finderrow = []
+            findercol = []
 
-        columns_erased=0
-        print("\n")
-        #we attribute the parameter of the function to a variable
-        adj_matrix = matrix
-        #we print the matrix
-        for i in adj_matrix:
-            print(i)
-        #if the matrix is a 0(1 row and column) , or only a 1, it will return false
-        if adj_matrix == [[0]]or adj_matrix==[[1]]:
-            print("connection terminated")
+            #these two loops will gather where is located the deleted row or column
+            for col in range(num_cols):
+                col_has_zeros = all(adj_matrix[row][col] == 0 for row in range(num_rows))#the all function will detect the columns that are full of 0
+                if col_has_zeros:
+                    findercol.append(col)#we will remember them if we append in the findercol variable
+            for row in range(num_rows):
+                row_has_zeros = all(adj_matrix[row][col] == 0 for col in range(num_cols))#the all function will detect the rows that are full of 0
+                if row_has_zeros:
+                    finderrow.append(row)#same here
+
+            #for these two "for" conditions, we will fuse the informations of the columns and rows of 0 so that we can erase them later in the function remove_rowcol
+            #IE: the finderrow and findercol are always equal because we are in a square matrix
+            for i in range(len(findercol)):
+                finderrow.append(findercol[i])
+                columns_erased+=1#we are loggin the informations if a row or a columns is going to be erased
+            for i in range(len(finderrow)):
+                findercol.append(finderrow[i])
+                columns_erased+=1#the logging is the same here
+
+            finderrow = list(set(finderrow + findercol))
+            findercol = list(set(findercol + finderrow))
+
+            #this line is a debug line
+            #print("findercol (column erased):", findercol)
+
+            #now we append all of the columns/row that have been erased so that we can review them after
+            test.append(findercol)
+            #this is just a small check here if something gets wrong
+            if adj_matrix == [0]:
+                return False
+
+            else:#this is where the columns and rows are erased simulaneousely
+                adj_matrix = remove_rowcol(adj_matrix, finderrow, findercol)
+                if columns_erased==0:#now the columns_erased are put in good use here, if there is a cycle, so that means we can break out of the infinite loop because no modification occured
+                    break#we got out of the algorithm now
+        except IndexError:
+            print("ATTENTION")
             return False
-        #we attribute the counters for the next parts
-        num_rows = len(adj_matrix)
-        num_cols = len(adj_matrix[0])
-        finderrow = []
-        findercol = []
-
-        #these two loops will gather where is located the deleted row or column
-        for col in range(num_cols):
-            col_has_zeros = all(adj_matrix[row][col] == 0 for row in range(num_rows))#the all function will detect the columns that are full of 0
-            if col_has_zeros:
-                findercol.append(col)#we will remember them if we append in the findercol variable
-        for row in range(num_rows):
-            row_has_zeros = all(adj_matrix[row][col] == 0 for col in range(num_cols))#the all function will detect the rows that are full of 0
-            if row_has_zeros:
-                finderrow.append(row)#same here
-
-        #for these two "for" conditions, we will fuse the informations of the columns and rows of 0 so that we can erase them later in the function remove_rowcol
-        #IE: the finderrow and findercol are always equal because we are in a square matrix
-        for i in range(len(findercol)):
-            finderrow.append(findercol[i])
-            columns_erased+=1#we are loggin the informations if a row or a columns is going to be erased
-        for i in range(len(finderrow)):
-            findercol.append(finderrow[i])
-            columns_erased+=1#the logging is the same here
-
-        finderrow = list(set(finderrow + findercol))
-        findercol = list(set(findercol + finderrow))
-
-        #this line is a debug line
-        #print("findercol (column erased):", findercol)
-
-        #now we append all of the columns/row that have been erased so that we can review them after
-        test.append(findercol)
-        #this is just a small check here if something gets wrong
-        if adj_matrix == [0]:
-            return False
-
-        else:#this is where the columns and rows are erased simulaneousely
-            adj_matrix = remove_rowcol(adj_matrix, finderrow, findercol)
-            if columns_erased==0:#now the columns_erased are put in good use here, if there is a cycle, so that means we can break out of the infinite loop because no modification occured
-                break#we got out of the algorithm now
+        pass
 
     #initialisation of the dictionnary so that we have a mark of which columns/row is erased, the dictionnary will look like : {0:0, 1:1 [and so on]}
     for i in range(len(cpt)):
@@ -148,7 +154,7 @@ def remove_zeros(matrix):
 
 
 
-#remove_zeros(matrix)
+remove_zeros(matrix)
 
 
 
@@ -188,4 +194,42 @@ def singleexitpoint(n):
 
 for i in matrix:
     print(i)
-singleexitpoint(12)
+#singleentrypoint(12)
+
+def is_scheduling_graph(graph_matrix):
+    # Iterate through each vertex in the graph
+    for vertex in range(len(graph_matrix)):
+        # Get the weights of all outgoing edges of the vertex
+        outgoing_weights = set([graph_matrix[vertex][j] for j in range(len(graph_matrix)) if graph_matrix[vertex][j] != 0])
+
+        # Check if all outgoing edges have the same weight
+        if len(outgoing_weights) != 1:
+            print("heh you failed")
+            return False
+
+    # If all vertices satisfy the condition, return True
+    print("YOLO TRUEEEE")
+    return True
+
+
+
+def outgoingzero(graph_matrix):
+    # Check if the entry vertex has any outgoing edges
+    if any(graph_matrix[0][j] != 0 for j in range(1, len(graph_matrix))):
+        print("false begin")
+        return False
+
+    # Iterate through each vertex in the graph except for the entry vertex
+    for vertex in range(1, len(graph_matrix)):
+        # Get the weights of all outgoing edges of the vertex
+        outgoing_weights = set([graph_matrix[vertex][j] for j in range(len(graph_matrix)) if graph_matrix[vertex][j] != 0])
+
+        # Check if all outgoing edges have the same weight
+        if len(outgoing_weights) != 1:
+            print("NO")
+            return False
+
+    # If all vertices satisfy the conditions, return True
+    print("YEAH")
+    return True
+
