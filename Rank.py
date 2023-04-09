@@ -17,7 +17,7 @@ def add_column_number(matrix):
     # We find the number of columns
     num_cols = len(matrix[0])
     # We create a list of the number of the column
-    lst = [i + 1 for i in range(num_cols)]
+    lst = [i for i in range(num_cols)]
     # We add it to the begining of the matrix
     matrix.insert(0, lst)
 
