@@ -1,38 +1,30 @@
 from Latest_stables import *
 from Earliest_stables import *
 from Rank import *
+from question3 import *
+
 
 #temporary measure since i need a dictionnary of ranks
 rankDico = {"1": 0, "5": 1, "4": 2, "2": 3, "6": 3, "3": 4, "7": 5, "8": 6}
-"""
-rankDico2 = find_rank(
-        add_column_number(
-            del_omega(
-                 getAdjacencyMatrix(
-                    getConsTable(11)))),rank=0,ranklist={})
-print(rankDico2)
-"""
-
 
 #This function computew and returns a dictionnary containing all the latest  - earliest dates which will be used to determine the critical path
-def earliestMinusLatest(n):
+def earliestMinusLatest(n, rankDico):
     #prepare the 2 lists that contains latest and earliest dates
-    temp_earliest = earliestByPredecessorsUsingBellman(getAdjacencyMatrix(getConsTable(n)), globalDurations(getConsTable(n)))
-    latest = latestBySuccessors(n,earliestByPredecessorsUsingBellman(getAdjacencyMatrix(getConsTable(n)), globalDurations(getConsTable(n))))
+    matrix = getAdjacencyMatrix(n)
+    rankList = rankDicoInlist(find_rank(add_column_number(del_omega(matrix)), rank=0, ranklist={}))
 
-    #temporary measure as one takes into account alpha/omega and not the other therefore the 2 arrays returned are of different dimensions
-    earliest = []
-    for i in range(len(temp_earliest)):
-        if i != 0 and i != len(temp_earliest) - 1:
-            earliest.append(temp_earliest[i])
+    temp_earliest = earliestByPredecessors(n, rankList)
+
+    temp_latest = latestBySuccessors(n, temp_earliest,rankList)
 
     #computes the earliest minus latest list
     earliestMinusLatest = []
-    for i in range(len(earliest)):
-        earliestMinusLatest.append(earliest[i] - latest[i])
+    for i in range(len(temp_earliest)):
+        earliestMinusLatest.append(temp_earliest[i] - temp_latest[i])
 
     #transform the list previously obtained into a dictionnary to facilitate calculations
     earliestMinusLatest_Dico = rankDico.copy()
+
     counter = 0
     for i in earliestMinusLatest_Dico:
         earliestMinusLatest_Dico[i] = earliestMinusLatest[counter]
@@ -62,8 +54,9 @@ def getNextVertex(n, vertex, rankDico, earliestMinusLatest, Critical_Path, index
         # if ArrayVertex is not null it means there are several critical path diverging, they are added to the Critical_Path array and computed before  continuing the initial one
         if len(ArrayVertex) >= 1:
             for i in range(len(ArrayVertex)):
-                Critical_Path.append(Critical_Path[index] + str(ArrayVertex[i]) + "->") #the new critical path is the same as the one we were working on until now therefore it is copied in the next 
-                getNextVertex(n, ArrayVertex[i], rankDico, earliestMinusLatest, Critical_Path, index + 1 + int(i))
+                Critical_Path.append(Critical_Path[index] + str(ArrayVertex[i]) + "->") #the new critical path is the same as the one we were working on until now therefore it is copied in the next
+
+                getNextVertex(n, ArrayVertex[i], rankDico, earliestMinusLatest, Critical_Path, len(Critical_Path) - 1)
 
         Critical_Path[index] += str(minRankVertex) + "->"
         getNextVertex(n, minRankVertex, rankDico, earliestMinusLatest, Critical_Path, index)
@@ -73,18 +66,32 @@ def getNextVertex(n, vertex, rankDico, earliestMinusLatest, Critical_Path, index
 
 #this function will be the one called to find the final path(s) of a graphe, calling all the others
 def criticalPath(n):
-    earliestMinusLatest_Dico = earliestMinusLatest(n)
+    if remove_zeros(getAdjacencyMatrix(n)) == False:
 
-    Critical_Path = [] # Array to store if necessary the several critical paths
-    #rankDico = *code pour obtenir le dictionnaire*  #A dictionnary containing the vertex and their ranks
+        matrix = getAdjacencyMatrix(n)
+        Critical_Path = [] # Array to store if necessary the several critical paths
+        temp_rankDico = find_rank(add_column_number(del_omega(matrix)), rank=0, ranklist={})
+        # creates a temporary dictionnary
 
-    for i in earliestMinusLatest_Dico : #for loop in case there are several starting points
-        if rankDico[str(i)] == 0 and earliestMinusLatest_Dico[str(i)] == 0: #initialises the algorithm only for starting points that belong to a critical path
-            Critical_Path.append("Alpha->" + str(i) + "->") #Critical path is filled one vertice by one  for easier copy when needed
-            getNextVertex(n, i, rankDico, earliestMinusLatest_Dico, Critical_Path, len(Critical_Path) - 1) #call the function to keep going
+        rankDico = {} #replaces the previous dictionnary with another one that does not take in account alpha and omega for simplicity reasons
+        for i in temp_rankDico:
+            if i != "alpha" and i != "omega":
+                rankDico[str(i)] = temp_rankDico[i] - 1
 
-    for i in range(len(Critical_Path)): #displays all the critical path
-        print("Critical path", i + 1, ": ", Critical_Path[i])
+        earliestMinusLatest_Dico = earliestMinusLatest(n, rankDico)
 
-criticalPath(11)
+        for i in earliestMinusLatest_Dico : #for loop in case there are several starting points
 
+            if rankDico[str(i)] == 0 and earliestMinusLatest_Dico[str(i)] == 0: #initialises the algorithm only for starting points that belong to a critical path
+
+                Critical_Path.append("Alpha->" + str(i) + "->") #Critical path is filled one vertice by one  for easier copy when needed
+                getNextVertex(n, i, rankDico, earliestMinusLatest_Dico, Critical_Path, len(Critical_Path) - 1) #call the function to keep going
+
+        for i in range(len(Critical_Path)): #displays all the critical path
+
+            print("Critical path", i + 1, ": ", Critical_Path[i])
+
+    else:
+        print("Cycle detected, impossible to compute a critical path")
+
+criticalPath(6)
