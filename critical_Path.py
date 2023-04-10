@@ -4,18 +4,12 @@ from Rank import *
 from question3 import *
 
 
-#temporary measure since i need a dictionnary of ranks
-rankDico = {"1": 0, "5": 1, "4": 2, "2": 3, "6": 3, "3": 4, "7": 5, "8": 6}
-
 #This function computew and returns a dictionnary containing all the latest  - earliest dates which will be used to determine the critical path
 def earliestMinusLatest(n, rankDico):
     #prepare the 2 lists that contains latest and earliest dates
-    matrix = getAdjacencyMatrix(n)
-    rankList = rankDicoInlist(find_rank(add_column_number(del_omega(matrix)), rank=0, ranklist={}))
+    temp_earliest = earliestByPredecessors(n)
 
-    temp_earliest = earliestByPredecessors(n, rankList)
-
-    temp_latest = latestBySuccessors(n, temp_earliest,rankList)
+    temp_latest = latestBySuccessors(n)
 
     #computes the earliest minus latest list
     earliestMinusLatest = []
@@ -35,9 +29,9 @@ def earliestMinusLatest(n, rankDico):
 
 #this function fills the Critical  path array with the next vertex in the critical path
 def getNextVertex(n, vertex, rankDico, earliestMinusLatest, Critical_Path, index):
-    if getSuccessors(getConsTable(n), int(vertex)) != []:
+    if getSuccessors(n, int(vertex)) != []:
 
-        Successors = getSuccessors(getConsTable(n), int(vertex))
+        Successors = getSuccessors(n, int(vertex))
         minRank = rankDico[str(Successors[0])]
         minRankVertex = 0
         ArrayVertex = [] # An array to store in case there are more than one critical path possible from a given vertex
@@ -66,7 +60,7 @@ def getNextVertex(n, vertex, rankDico, earliestMinusLatest, Critical_Path, index
 
 #this function will be the one called to find the final path(s) of a graphe, calling all the others
 def criticalPath(n):
-    try:
+
         if remove_zeros(getAdjacencyMatrix(n)) == False:
 
             matrix = getAdjacencyMatrix(n)
@@ -94,9 +88,7 @@ def criticalPath(n):
 
         else:
             print("Cycle detected, impossible to compute a critical path")
-    except FileNotFoundError:
-        print("File not found")
-    except NameError:
-        print("Invalid Name")
 
-criticalPath(12)
+criticalPath(6)
+
+
