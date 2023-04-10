@@ -3,10 +3,9 @@ from question1 import *
 
 
 
-matrix =  getAdjacencyMatrix(1)
+matrix =  getAdjacencyMatrix(11)
 countrowcol= []
-#for i in matrix:
- #   print(i)
+
 
 
 
@@ -16,7 +15,6 @@ countrowcol= []
 def remove_rowcol(adj_matrix, finderrow, findercol):
     # We sort out the row indices and the column indices so that we can erase them simpler next time
     row_indices = [row for row in range(len(adj_matrix)) if row in finderrow]
-
     col_indices = [col for col in range(len(adj_matrix[0])) if col in findercol]
 
     # putting the list in ascending order so we can remove the columns first and the the rows after
@@ -63,16 +61,13 @@ def remove_zeros(matrix):
     while running:
         try:
             columns_erased=0
-            print("\n")
+
             #we attribute the parameter of the function to a variable
             adj_matrix = matrix
-            #we print the matrix
-            for i in adj_matrix:
-                print(i)
             #if the matrix is a 0(1 row and column) , or only a 1, it will return false
             if adj_matrix == [[0]]or adj_matrix==[[1]]:
-                print("connection terminated")
                 return False
+
             #we attribute the counters for the next parts
             num_rows = len(adj_matrix)
             adj_matrix[0]
@@ -102,25 +97,25 @@ def remove_zeros(matrix):
             finderrow = list(set(finderrow + findercol))
             findercol = list(set(findercol + finderrow))
 
-            #this line is a debug line
-            #print("findercol (column erased):", findercol)
-
             #now we append all of the columns/row that have been erased so that we can review them after
             test.append(findercol)
             #this is just a small check here if something gets wrong
-            if adj_matrix == [0]:
+            if adj_matrix == [[0]]:
                 return False
 
-            else:#this is where the columns and rows are erased simulaneousely
+            else:
+                #this is where the columns and rows are erased simulaneousely
                 adj_matrix = remove_rowcol(adj_matrix, finderrow, findercol)
-                if columns_erased==0:#now the columns_erased are put in good use here, if there is a cycle, so that means we can break out of the infinite loop because no modification occured
+                # now the columns_erased are put in good use here, if there is a cycle,
+                # so that means we can break out of the infinite loop because no modification occurred
+                if columns_erased==0:
                     break#we got out of the algorithm now
         except IndexError:
-            print("ATTENTION")
             return False
         pass
 
-    #initialisation of the dictionnary so that we have a mark of which columns/row is erased, the dictionnary will look like : {0:0, 1:1 [and so on]}
+    #initialisation of the dictionary so that we have a mark of which columns/row is erased,
+    # the dictionary will look like : {0:0, 1:1 [and so on]}
     for i in range(len(countrowcol)):
         my_dict[countrowcol[i]] = i
     #this is initializing the test function into an ascending order of the 2d list
@@ -142,18 +137,13 @@ def remove_zeros(matrix):
             elif item > max(my_dict.values()):
                 key_to_delete = max(my_dict.keys())
                 del my_dict[key_to_delete]#deletion of the searched key
-
     #we store the keys of the dictionnary (the columns that remains) into a list
     columns_affected= list(my_dict.keys())
-    print("COLUMNS AND ROWS AFFECTED : ",columns_affected)
-    print("final matrix :")
-    for i in matrix:
-        print(i)
     return True, columns_affected
 
 
 
-remove_zeros(matrix)
+#remove_zeros(matrix)
 
 
 
@@ -165,21 +155,18 @@ def singleentrypoint(n):
     adj_matrix = getAdjacencyMatrix(n)
     positionsingle=[]
     countsigle=0
-    # we are lookin in the first row of the matrix,
-    # were the succesor of the alpha are located, which mean the entry points
+    # we are looking in the first row of the matrix,
+    # were the successor of the alpha are located, which mean the entry points
     for i in range(len(adj_matrix[0])):
         countsigle += adj_matrix[0][i]#we log the number of entry points
         if adj_matrix[0][i] == 1:#here is to find if there is a 1
             positionsingle.append(i)
     if countsigle > 1:#if there are multiple entry points
-        print(countsigle, "alpha splits into these entry points:", positionsingle)
-        return positionsingle
+        return False, positionsingle
     else:
-        print("only a single entry point :")
-        print(positionsingle)
-        return positionsingle
+        return True,positionsingle
 
-#singleentrypoint(12)
+
 
 def singleexitpoint(n):
     adj_matrix = getAdjacencyMatrix(n)
@@ -191,15 +178,14 @@ def singleexitpoint(n):
         if adj_matrix[i][-1]==1:#here is to find if there is a 1
             positionsingle.append(i)
     if countsigle>1:#if there are multiple exit points
-        print(countsigle, " points merge into one at :", positionsingle)
-        return positionsingle
+
+        return False, positionsingle
     else:
-        print("only a single exit point at :" ,positionsingle)
-        return positionsingle
+        return True, positionsingle
 
 
 
-#singleentrypoint(12)
+
 
 
 
@@ -210,11 +196,11 @@ def negative_edges(n):
         for line in file:#we split the file into lines
             columns = line.split()#and we put those lines inside a 2d list
             if len(columns) > 1:#we check if there is more than one column
-                #print(columns[1])
+
                 second_column = int(columns[1])#we put the second column in a variable
                 if second_column < 0:#if it is negative, it is printed
-                    print(f'Negative integer found: {second_column}')
                     return False
     return True
-#negative_edges(1)
+
+
 
