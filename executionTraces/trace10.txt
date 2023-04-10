@@ -1,0 +1,50 @@
+ADJACENCY MATRIX : 
+
++---------+-------+---+---+---+---+---+---+---+---+-------+
+| Vertice | Alpha | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | Omega |
++---------+-------+---+---+---+---+---+---+---+---+-------+
+|  Alpha  |   0   | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |   0   |
+|    1    |   0   | 0 | 1 | 0 | 1 | 1 | 0 | 0 | 0 |   0   |
+|    2    |   0   | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 |   0   |
+|    3    |   0   | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |   0   |
+|    4    |   0   | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 |   0   |
+|    5    |   0   | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 |   0   |
+|    6    |   0   | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |   1   |
+|    7    |   0   | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |   0   |
+|    8    |   0   | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |   1   |
+|  Omega  |   0   | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |   0   |
++---------+-------+---+---+---+---+---+---+---+---+-------+
+
+EARLIEST TABLES : 
+
+Ranks             |[0, 1, 2, 3, 3, 4, 5, 5, 6, 7]| 
+Vertex            |[0, 1, 2, 3, 4, 5, 6, 7, 8, -2]| 
+Predecessors      |[[], [0], [1], [2], [1, 2], [1, 4], [4, 5], [3, 5], [2, 4, 7], [6, 8]]| 
+Initial duration  |[[], [0], [2], [3], [2, 3], [2, 6], [6, 2], [5, 2], [3, 6, 6], [1, 1]]| 
+Earliest dates    |[0, 0, 2, 5, 5, 11, 13, 13, 19, 20]|
+
+LATEST TABLES : 
+
+Ranks             |[0, 1, 2, 3, 3, 4, 5, 5, 6, 7]| 
+Vertex            |[0, 1, 2, 3, 4, 5, 6, 7, 8, -2]| 
+Successors        |[[1], [2, 4, 5], [3, 4, 8], [7], [5, 6, 8], [6, 7], [-2], [8], [-2], []]| 
+Initial duration  |[[], [0], [2], [3], [2, 3], [2, 6], [6, 2], [5, 2], [3, 6, 6], [1, 1]]| 
+Latest dates      |[0, 0, 2, 8, 5, 11, 19, 13, 19, 20]|
+
+
+RANKS : 
+
+The rank of column number alpha is 0
+The rank of column number 1 column is 1
+The rank of column number 2 column is 2
+The rank of column number 3 column is 3
+The rank of column number 4 column is 3
+The rank of column number 5 column is 4
+The rank of column number 6 column is 5
+The rank of column number 7 column is 5
+The rank of column number 8 column is 6
+The rank of column number omega column is 7
+
+CRITICAL PATH : 
+
+Critical path 1 :  Alpha->1->2->4->5->7->8->Omega

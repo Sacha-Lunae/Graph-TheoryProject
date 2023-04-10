@@ -1,5 +1,5 @@
 import numpy as np
-from question2 import *
+from adjacency import *
 
 def add_column_number(matrix):
     # We find the number of columns
@@ -59,23 +59,3 @@ def find_rank(matrix,rank,ranklist):
 def del_omega(matrix):
     new_matrix = [row[:-1] for row in matrix[:-1]]  # Remove last column and last row using list slicing
     return new_matrix
-
-
-
-print(find_rank(
-        add_column_number(
-            del_omega(
-                 getAdjacencyMatrix(
-                    getConsTable(7)))),rank=0,ranklist={}))
-
-
-#print(display_matrix(getAdjacencyMatrix(
-#            getConsTable(2))))
-
-
-
-print(find_rank(
-        add_column_number(
-            del_omega(
-                 getAdjacencyMatrix(
-                    getConsTable(7)))),rank=0,ranklist={}))
