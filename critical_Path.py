@@ -59,13 +59,12 @@ def getNextVertex(n, vertex, rankDico, earliestMinusLatest, Critical_Path, index
 
 
 #this function will be the one called to find the final path(s) of a graphe, calling all the others
-def criticalPath(n):
+def criticalPath(n, temp_rankDico):
 
         if remove_zeros(getAdjacencyMatrix(n)) == False:
 
-            matrix = getAdjacencyMatrix(n)
-            Critical_Path = [] # Array to store if necessary the several critical paths
-            temp_rankDico = find_rank(add_column_number(del_omega(matrix)), rank=0, ranklist={})
+            Critical_Path = []  # Array to store if necessary the several critical paths
+
             # creates a temporary dictionnary
 
             rankDico = {} #replaces the previous dictionnary with another one that does not take in account alpha and omega for simplicity reasons
@@ -89,6 +88,7 @@ def criticalPath(n):
         else:
             print("Cycle detected, impossible to compute a critical path")
 
-criticalPath(6)
-
+matrix = getAdjacencyMatrix(11)
+temp_rankDico = find_rank(add_column_number(del_omega(matrix)), rank=0, ranklist={})
+criticalPath(11, temp_rankDico)
 
