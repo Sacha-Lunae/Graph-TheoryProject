@@ -1,4 +1,4 @@
-from constraint import *
+from Constraint import *
 from prettyTables import * 
 
 def swapMatrix(matrix) :
@@ -70,3 +70,37 @@ def getAdjacencyMatrix(graphNum):
             adjacency_matrix[-1][i] = 0
 
     return adjacency_matrix
+        
+def getWeights(graphNum) :
+    graph = getConsTable(graphNum)
+    weights = []
+    for i in range (len(graph)) :
+        weights.append(graph[i][1])
+
+    weights.insert(0,0)
+    weights.append(0)
+
+    return weights
+
+
+def bellman(graphNum):
+    graph = getAdjacencyMatrix(graphNum)
+    weights = getWeights(graphNum)
+    n = len(graph)
+
+    #initialisation de l'algo de bellman
+    dist = [float('-inf')] * n
+    dist[0] = 0
+
+
+    for i in range(n - 1):
+        for u in range(n):
+            for v in range(n):
+                if graph[u][v] == 1:
+                    if dist[v] < dist[u] + weights[u]:
+                        dist[v] = dist[u] + weights[u]
+
+    return dist
+
+
+prettyAdjacency(getAdjacencyMatrix(11))
