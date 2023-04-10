@@ -66,32 +66,37 @@ def getNextVertex(n, vertex, rankDico, earliestMinusLatest, Critical_Path, index
 
 #this function will be the one called to find the final path(s) of a graphe, calling all the others
 def criticalPath(n):
-    if remove_zeros(getAdjacencyMatrix(n)) == False:
+    try:
+        if remove_zeros(getAdjacencyMatrix(n)) == False:
 
-        matrix = getAdjacencyMatrix(n)
-        Critical_Path = [] # Array to store if necessary the several critical paths
-        temp_rankDico = find_rank(add_column_number(del_omega(matrix)), rank=0, ranklist={})
-        # creates a temporary dictionnary
+            matrix = getAdjacencyMatrix(n)
+            Critical_Path = [] # Array to store if necessary the several critical paths
+            temp_rankDico = find_rank(add_column_number(del_omega(matrix)), rank=0, ranklist={})
+            # creates a temporary dictionnary
 
-        rankDico = {} #replaces the previous dictionnary with another one that does not take in account alpha and omega for simplicity reasons
-        for i in temp_rankDico:
-            if i != "alpha" and i != "omega":
-                rankDico[str(i)] = temp_rankDico[i] - 1
+            rankDico = {} #replaces the previous dictionnary with another one that does not take in account alpha and omega for simplicity reasons
+            for i in temp_rankDico:
+                if i != "alpha" and i != "omega":
+                    rankDico[str(i)] = temp_rankDico[i] - 1
 
-        earliestMinusLatest_Dico = earliestMinusLatest(n, rankDico)
+            earliestMinusLatest_Dico = earliestMinusLatest(n, rankDico)
 
-        for i in earliestMinusLatest_Dico : #for loop in case there are several starting points
+            for i in earliestMinusLatest_Dico : #for loop in case there are several starting points
 
-            if rankDico[str(i)] == 0 and earliestMinusLatest_Dico[str(i)] == 0: #initialises the algorithm only for starting points that belong to a critical path
+                if rankDico[str(i)] == 0 and earliestMinusLatest_Dico[str(i)] == 0: #initialises the algorithm only for starting points that belong to a critical path
 
-                Critical_Path.append("Alpha->" + str(i) + "->") #Critical path is filled one vertice by one  for easier copy when needed
-                getNextVertex(n, i, rankDico, earliestMinusLatest_Dico, Critical_Path, len(Critical_Path) - 1) #call the function to keep going
+                    Critical_Path.append("Alpha->" + str(i) + "->") #Critical path is filled one vertice by one  for easier copy when needed
+                    getNextVertex(n, i, rankDico, earliestMinusLatest_Dico, Critical_Path, len(Critical_Path) - 1) #call the function to keep going
 
-        for i in range(len(Critical_Path)): #displays all the critical path
+            for i in range(len(Critical_Path)): #displays all the critical path
 
-            print("Critical path", i + 1, ": ", Critical_Path[i])
+                print("Critical path", i + 1, ": ", Critical_Path[i])
 
-    else:
-        print("Cycle detected, impossible to compute a critical path")
+        else:
+            print("Cycle detected, impossible to compute a critical path")
+    except FileNotFoundError:
+        print("File not found")
+    except NameError:
+        print("Invalid Name")
 
-criticalPath(6)
+criticalPath(12)
