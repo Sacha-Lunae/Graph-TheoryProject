@@ -3,36 +3,32 @@ from question1 import *
 
 
 
-matrix =  getAdjacencyMatrix(7)
+matrix =  getAdjacencyMatrix(1)
 countrowcol= []
 #for i in matrix:
  #   print(i)
 
-def initlabelrowcol(countrowcol, adj_matrix):
-    for i in range(len(adj_matrix)):
-        countrowcol.append(i)
-    return countrowcol
 
 
 
 
 
 def remove_rowcol(adj_matrix, finderrow, findercol):
-    # separate row indices and column indices
+    # We sort out the row indices and the column indices so that we can erase them simpler next time
     row_indices = [row for row in range(len(adj_matrix)) if row in finderrow]
-
+    
     col_indices = [col for col in range(len(adj_matrix[0])) if col in findercol]
 
-    # sort the lists in descending order so that we remove the columns first, then the rows
+    # putting the list in ascending order so we can remove the columns first and the the rows after
     row_indices.sort(reverse=True)
     col_indices.sort(reverse=True)
-    # remove columns first
+    # we remove the columns
     for col in col_indices:
         if col < len(adj_matrix[0]):
             for row in range(len(adj_matrix)):
                 if len(adj_matrix[row]) > col:
                     adj_matrix[row].pop(col)
-    # remove rows
+    #and then we remove the rows in this next loop
     for row in row_indices:
         if row < len(adj_matrix):
             adj_matrix.pop(row)
@@ -57,10 +53,11 @@ def remove_zeros(matrix):
     #running if for the while loop
     running=True
     countrowcol = []
-    countrowcol = initlabelrowcol(countrowcol, matrix)
-    test=[]
+    for i in range(len(matrix)):#we initialise the countrowcol variable to be the size of the matrix, which will help us to keep track for the whole operation
+        countrowcol.append(i)
+
+    test=[]#this variable will be log step by step the multiple or single row erasion in a 2d list
     my_dict = {}
-    cpt=countrowcol
 
 
     while running:
@@ -124,8 +121,8 @@ def remove_zeros(matrix):
         pass
 
     #initialisation of the dictionnary so that we have a mark of which columns/row is erased, the dictionnary will look like : {0:0, 1:1 [and so on]}
-    for i in range(len(cpt)):
-        my_dict[cpt[i]] = i
+    for i in range(len(countrowcol)):
+        my_dict[countrowcol[i]] = i
     #this is initializing the test function into an ascending order of the 2d list
     for sublist in test:
         sublist.sort(reverse=True)
@@ -156,7 +153,7 @@ def remove_zeros(matrix):
 
 
 
-#remove_zeros(matrix)
+remove_zeros(matrix)
 
 
 
@@ -168,26 +165,30 @@ def singleentrypoint(n):
     adj_matrix = getAdjacencyMatrix(n)
     positionsingle=[]
     countsigle=0
-    for i in range(len(adj_matrix[0])):
-        countsigle += adj_matrix[0][i]
-        if adj_matrix[0][i] == 1:
+    for i in range(len(adj_matrix[0])):#we are lookin in the first row of the matrix, were the succesor of the alpha are located, which mean the entry points
+        countsigle += adj_matrix[0][i]#we log the number of entry points
+        if adj_matrix[0][i] == 1:#here is to find if there is a 1
             positionsingle.append(i)
-    if countsigle > 1:
-        print(countsigle, "points into one at position :", positionsingle)
+    if countsigle > 1:#if there are multiple entry points
+        print(countsigle, "alpha splits into these entry points:", positionsingle)
+        return positionsingle
     else:
         print("only a single entry point :")
         print(positionsingle)
+        return positionsingle
 
+#singleentrypoint(12)
 
 def singleexitpoint(n):
     adj_matrix = getAdjacencyMatrix(n)
     positionsingle=[]
     countsigle=0
+    #we are looking at the last column of the matrix, where the successor to omega are located
     for i in range(len(adj_matrix)):
-        countsigle+=adj_matrix[i][-1]
-        if adj_matrix[i][-1]==1:
+        countsigle+=adj_matrix[i][-1]#we log the number of exit points
+        if adj_matrix[i][-1]==1:#here is to find if there is a 1
             positionsingle.append(i)
-    if countsigle>1:
+    if countsigle>1:#if there are multiple exit points
         print(countsigle, " points merge into one at :", positionsingle)
     else:
         print("only a single exit point at :" ,positionsingle)
@@ -210,6 +211,6 @@ def negative_edges(n):
                 second_column = int(columns[1])#we put the second column in a variable
                 if second_column < 0:#if it is negative, it is printed
                     print(f'Negative integer found: {second_column}')
-            
+
 #negative_edges(1)
 
