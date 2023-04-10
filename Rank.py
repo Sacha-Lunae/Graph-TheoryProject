@@ -1,23 +1,11 @@
 import numpy as np
 from question2 import *
 
-
-def display_matrix(matrix):
-    """
-    Takes a 2D matrix as input and displays it in a clean and easily readable way, with "1" values printed in red.
-    """
-
-    for row in matrix:
-        formatted_row = [("\033[91m" + str(element) + "\033[0m") if element == 1 else str(element) for element in row]
-        print(" ".join(formatted_row))
-    print("\n\n\n")
-
-
 def add_column_number(matrix):
     # We find the number of columns
     num_cols = len(matrix[0])
     # We create a list of the number of the column
-    lst = [i + 1 for i in range(num_cols)]
+    lst = [i  for i in range(num_cols)]
     # We add it to the begining of the matrix
     matrix.insert(0, lst)
 
@@ -26,17 +14,12 @@ def add_column_number(matrix):
 
 def find_rank(matrix,rank,ranklist):
 
-    display_matrix(matrix)
-
     if len(matrix) == 0 or all(len(row) == 0 for row in matrix):
         print(f"The rank of column number omega column is {rank}")
-        ranklist['omega'] = rank
+        ranklist[-2] = rank
         return ranklist
 
 
-    """
-    Takes a 2D matrix as input, deletes all columns and rows with a sum of 0, and returns the modified matrix.
-    """
     # Convert the matrix to a NumPy array
     matrix = np.array(matrix)
 
@@ -47,8 +30,8 @@ def find_rank(matrix,rank,ranklist):
         if col_sum == 0:
             if rank == 0:
                 zero_sum_cols.append(col_index)
-                print(f"The rank of column number alpha column is {rank}")
-                ranklist.update({"alpha": rank})
+                print(f"The rank of column number alpha is {rank}")
+                ranklist.update({0 : rank})
 
             else:
                 zero_sum_cols.append(col_index)
@@ -78,8 +61,12 @@ def del_omega(matrix):
     return new_matrix
 
 
-#print(add_column_number(getAdjacencyMatrix(getConsTable(2))))
-#display_matrix(getAdjacencyMatrix(getConsTable(4)))
+
+print(find_rank(
+        add_column_number(
+            del_omega(
+                 getAdjacencyMatrix(
+                    getConsTable(7)))),rank=0,ranklist={}))
 
 
 #print(display_matrix(getAdjacencyMatrix(

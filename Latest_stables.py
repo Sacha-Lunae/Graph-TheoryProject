@@ -1,89 +1,106 @@
 from Earliest_stables import *
-
-ranklist = {"1": 0, "5": 1, "4": 2, "2": 3, "6": 3, "3": 4, "7": 5, "8": 6}
-listPred = [[], [1], [1, 5], [1, 4], [4, 5], [2], [3, 5], [2, 4, 6, 7]]
-rankl = [1, 5, 4, 2, 6, 3, 7, 8]
+from commonFunctionsEarlLate import *
 
 
-def getSuccessors(matrix, vertex):  # If you want to test the function: getSuccessors(getConsTable(n), vertex)
+def singleentrypoint(n):
+    adj_matrix = getAdjacencyMatrix(n)
+    positionsingle = []
+    countsigle = 0
+    for i in range(len(adj_matrix[0])):
+        countsigle += adj_matrix[0][i]
+        if adj_matrix[0][i] == 1:
+            positionsingle.append(i)
+    return positionsingle
+
+
+def getSuccessors(n, vertex):
+    table = getConsTable(n)
     succ = []
-    for i in range(len(matrix)):
-        for j in range(2, len(matrix[i])):
-            if matrix[i][j] == vertex:
-                succ.append(matrix[i][0])
+    for i in range(len(table)):
+        for j in range(2, len(table[i])):
+            if table[i][j] == vertex:  # if the vertex is a predecessor for others vertex
+                succ.append(table[i][0])  # insert the vertex as a successor
     return succ
 
 
-def hasSuccessorsState(matrix, vertex):  # If you want to test the function: hasSuccessorsState(getConsTable(n), vertex)
-    count = 0
-    for i in range(len(matrix)):
-        for j in range(2, len(matrix[i])):
-            if matrix[i][j] == vertex:
-                count = count + 1
-    return count
-
-
-def setSuccessorsOrder(matrix):  # If you want to test the function: set_successors_order(getConsTable(n))
+def setSuccessorsOrder(n):
+    table = getConsTable(n)
+    rankDico = find_rank(add_column_number(del_omega(getAdjacencyMatrix(n))), rank=0, ranklist={})  # list of vertex in order of ranks
     listSucc = []
-    for cle in ranklist.keys():
+    for cle in rankDico.keys():
         newline = []
-        for i in range(len(matrix)):  # getAdjacencyMatrix(getConsTable(11))))
-            if int(cle) == matrix[i][0]:
-                for l in range(len(matrix)):
-                    for m in range(2, len(matrix[l])):
-                        if matrix[l][m] == int(cle):
-                            newline.append(matrix[l][0])
-                listSucc.append(newline)
+
+        if int(cle) == -2:  # if cle is equal to gamma
+            listSucc.append(newline)  # thus it has no predecessors, so we insert [] in listPred
+
+        elif int(cle) == 0:  # if cle is equal to alpha
+            listSucc.append(singleentrypoint(n))  # listPred insert successors of alpha
+
+        elif hasSuccessorsVertex(n, int(cle)) == 0:  # if the vertex cle has no successors then
+            newline.append(-2)  # its predecessor is gamma
+
+        for i in range(len(table)):
+            if int(cle) == table[i][0]:  # if a vertex cle is equal to a vertex (first column)
+                for l in range(len(table)):
+                    for m in range(2, len(table[l])):
+                        if table[l][m] == int(cle):  # does this vertex appear as a predecessor in the file txt ? if yes then
+                            newline.append(table[l][0])  # insert the vertex on the same line where there were a predecessor
+                listSucc.append(newline)  # insert all successors
     return listSucc
 
 
-def latestBySuccessors(n, listEarliest):    # If you want to test the function: latestBySuccessors(n,earliestByPredecessorsUsingBellman(
-                                            # getAdjacencyMatrix(getConsTable(n)),globalDurations(getConsTable(n))))
+def latestBySuccessors(n):
+    listEarliest = earliestByPredecessors(n)  # list Earliest dates
+    vertexRank = rankDicoInlist(n)  # list of vertex in order of ranks
     listTempo1 = []
     listTempo2 = {}
     listTempo3 = []
     listLateSuccFINAL = []
-    departurePoint = listEarliest[len(listEarliest) - 1]
-    for i in range(len(rankl) - 1, -1, -1):
-        if hasSuccessorsState(getConsTable(n), rankl[i]) == 0:
-            listTempo2.update({rankl[i]: departurePoint - getDurationByVertex(getConsTable(n), rankl[i])})
+    departurePoint = listEarliest[
+        len(listEarliest) - 1]  # assign the result of the last earliest duration (the biggest value in earliest)
+    for i in range(len(vertexRank) - 1, -1, -1):  # we start backward
+        if vertexRank[i] == 0:
+            listTempo2.update({vertexRank[i]: 0})
+
+        elif vertexRank[i] == -2:  # if the vertex is gamma
+            listTempo2.update({vertexRank[i]: departurePoint})  # we insert at position gamma the value departurePoint (the result of the last earliest duration)
+
+        elif hasSuccessorsVertex(n, vertexRank[i]) == 0:  # if the vertex is an exit
+            listTempo2.update({vertexRank[i]: departurePoint - getDurationByVertex(n, vertexRank[i])})  # the duration of the predecessor of gamma is departurePoint - the duration of the vertex
         else:
-            Succ = getSuccessors(getConsTable(n), rankl[i])
-            for j in range(len(Succ)):
+            Succ = getSuccessors(n, vertexRank[i])  # we get the successors of omega
+            for j in range(len(Succ)):  # for those successors
                 for cle, valeur in listTempo2.items():
-                    if cle == Succ[j]:
-                        temp = valeur - getDurationByVertex(getConsTable(n), rankl[i])
+                    if cle == Succ[j]:  # if cle is equal to one of the successors of omega
+                        temp = valeur - getDurationByVertex(n, vertexRank[i])  # temp takes the duration at the successor + duration of the successors
                         listTempo1.append(temp)
-            listTempo1.sort()
-            print("listtempo", listTempo1)
-            final = listTempo1[0]
+            listTempo1.sort()  # sort the temporary list listTempo1
+            final = listTempo1[0]  # final take the smallest value in listTempo1
             listTempo1 = []
-            listTempo2.update({rankl[i]: final})
-    for valeur in listTempo2.values():
-        listTempo3.append(valeur)
-     for i in range(len(listTempo3)-1,-1,-1):
+            listTempo2.update({vertexRank[i]: final})  # listTempo2 insert the final value
+    for valeur in listTempo2.values():  # for all latest durations calculated
+        listTempo3.append(valeur)  # add them in a list
+    for i in range(len(listTempo3) - 1, -1, -1):  # reverse the list
         listLateSuccFINAL.append(listTempo3[i])
     return listLateSuccFINAL
 
 
-def display_latest(n, matrix):
+def displayLatest(n):
+    rankDico = find_rank(add_column_number(del_omega(getAdjacencyMatrix(n))), rank=0, ranklist={})  # dictionary containing vertex and their rank
     listRank = []
     listVertex = []
-    for valeur in matrix.values():
+    for valeur in rankDico.values():
         listRank.append(valeur)
-    for cle in matrix.keys():
+    for cle in rankDico.keys():
         listVertex.append(cle)
 
-    listSucc = setSuccessorsOrder(getConsTable(n))
-    listLateSuccINIT = setDurationOrder(n, listSucc)
-    listLateSuccFINAL = latestBySuccessors(n, earliestByPredecessorsUsingBellman(getAdjacencyMatrix(getConsTable((n))),
-                                                                                globalDurations(getConsTable(n))))
+    listSucc = setSuccessorsOrder(n)
+    listLateSuccINIT = setDurationOrder(n)
+    listLateSuccFINAL = latestBySuccessors(n)
 
-    print("|", listRank, "|")
-    print("|", listVertex, "|")
-    print("|", listSucc, "|")
-    print("|", listLateSuccINIT, "|")
-    print("|", listLateSuccFINAL, "|")
+    print("Ranks             |", listRank, "|")  # display list of ranks
+    print("Vertex            |", listVertex, "|")  # display list of vertex in order of ranks
+    print("Successors        |", listSucc, "|")  # display list of successors of vertex in order of ranks
+    print("Initial duration  |", listLateSuccINIT, "|")  # display list of duration of each vertex without any calculation in order of ranks
+    print("Latest dates      |", listLateSuccFINAL, "|")  # display final list of duration of each vertex with calculations in order of ranks
 
-
-display_latest(11, ranklist)
