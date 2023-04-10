@@ -129,7 +129,7 @@ def displayEarliest(n):
 
     print("Ranks             |", listRank, "|")  # display list of ranks
     print("Vertex            |", listVertex, "|")  # display list of vertex in order of ranks
-    print("Successors        |", listPred, "|")  # display list of predecessors of vertex in order of ranks
+    print("Predecessors      |", listPred, "|")  # display list of predecessors of vertex in order of ranks
     print("Initial duration  |", listEarlPredINIT, "|")  # display list of duration of each vertex without any calculation in order of ranks
     print("Earliest dates    |", listEarlPredFINAL, "|")  # display final list of duration of each vertex with calculations in order of ranks
 
