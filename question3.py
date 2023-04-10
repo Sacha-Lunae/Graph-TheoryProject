@@ -16,7 +16,7 @@ countrowcol= []
 def remove_rowcol(adj_matrix, finderrow, findercol):
     # We sort out the row indices and the column indices so that we can erase them simpler next time
     row_indices = [row for row in range(len(adj_matrix)) if row in finderrow]
-    
+
     col_indices = [col for col in range(len(adj_matrix[0])) if col in findercol]
 
     # putting the list in ascending order so we can remove the columns first and the the rows after
@@ -165,7 +165,9 @@ def singleentrypoint(n):
     adj_matrix = getAdjacencyMatrix(n)
     positionsingle=[]
     countsigle=0
-    for i in range(len(adj_matrix[0])):#we are lookin in the first row of the matrix, were the succesor of the alpha are located, which mean the entry points
+    # we are lookin in the first row of the matrix,
+    # were the succesor of the alpha are located, which mean the entry points
+    for i in range(len(adj_matrix[0])):
         countsigle += adj_matrix[0][i]#we log the number of entry points
         if adj_matrix[0][i] == 1:#here is to find if there is a 1
             positionsingle.append(i)
@@ -190,9 +192,10 @@ def singleexitpoint(n):
             positionsingle.append(i)
     if countsigle>1:#if there are multiple exit points
         print(countsigle, " points merge into one at :", positionsingle)
+        return positionsingle
     else:
         print("only a single exit point at :" ,positionsingle)
-
+        return positionsingle
 
 
 
@@ -211,6 +214,7 @@ def negative_edges(n):
                 second_column = int(columns[1])#we put the second column in a variable
                 if second_column < 0:#if it is negative, it is printed
                     print(f'Negative integer found: {second_column}')
-
+                    return False
+    return True
 #negative_edges(1)
 
