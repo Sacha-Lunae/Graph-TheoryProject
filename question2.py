@@ -6,7 +6,7 @@ def swapMatrix(matrix) :
     n = len(matrix)
     # we fill the new matrix with 0
     swapped = [[0 for j in range(n)] for i in range(n)]
-    # parcourir la matrice d'origine et inverser les lignes et colonnes
+    #We go through the whole matrix and we inverse lines and columns
     for i in range(n):
         for j in range(n):
             swapped[j][i] = matrix[i][j]
@@ -14,6 +14,8 @@ def swapMatrix(matrix) :
 
 
 def alphaOmega(matrix):
+    #The logic behind this : if there are only 0's (= if there are no predecessors/successors, depending on when we use the function)
+    #we add 1 at the end (to indicate that alpha is the predecessor / omega is the sucessor)
     alphaOmega = []
     for i, line in enumerate(matrix):
         if all(element == 0 for element in line):
@@ -35,14 +37,24 @@ def getAdjacencyMatrix(graphNum):
             #We add the '-1' because python indexes begin at 0
             adjacency_matrix[vertice][consTable[vertice][constraint] - 1] = 1
 
+    #Initialization of the alpha row
     alpha = alphaOmega(adjacency_matrix)
+
+    #Swapping the matrix
     adjacency_matrix = swapMatrix(adjacency_matrix)
+
+    #Initialization of the omega row
     omega = alphaOmega(adjacency_matrix)
+
+    #Insertion of alpha at the begenning of the matrix
     adjacency_matrix.insert(0, alpha)
+
+    #Insertion of omega at the end of the matrix
     adjacency_matrix.append(omega)
 
 
     for i in range (len(adjacency_matrix)) : 
+        #Make sure that the first column is only 0's (by inserting 0's at the beginning of each row)
 
         adjacency_matrix[i].insert(0,0)
 
@@ -53,6 +65,7 @@ def getAdjacencyMatrix(graphNum):
 
 
     for i in range (len(adjacency_matrix)) :
+        #Make sure that the last row is only 0's
         if adjacency_matrix[-1][i] == 1 :
             adjacency_matrix[-1][i] = 0
 
@@ -90,4 +103,4 @@ def bellman(graphNum):
     return dist
 
 
-prettyBellman(bellman(11))
+prettyAdjacency(getAdjacencyMatrix(11))

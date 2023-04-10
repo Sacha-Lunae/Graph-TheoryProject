@@ -13,6 +13,3 @@ def getConsTable(n) :
             rightArray.append(int(element))
         consTable.append(rightArray)
     return consTable
-
-def printConsTable(n) :
-    print(getConsTable(n))
